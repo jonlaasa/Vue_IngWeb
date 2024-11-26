@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Agenda">
+    <meta name="author" content="e-ghost 2019">
+
+    <title>AgendaVue</title>
+
+
+    <!-- Redes sociales -->
+    <meta property="og:title" content="AgendaVue">
+    <meta property="og:description" content="Agenda básica en Vue.js">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tu-sitio.com">
+    <meta property="og:image" content="https://tu-sitio.com/imagen.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AgendaVue">
+    <meta name="twitter:description" content="Una agenda básica en Vue.js">
+    <meta name="twitter:image" content="https://tu-sitio.com/imagen.png">
+
+
+    <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/freelancer.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    
+    <!-- Firebase -->
+    <script type="module" src="js/firebase_init.js"></script>
+
+    <!-- Microdata JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "AgendaVue",
+        "description": "Una agenda básica en Vue.js",
+        "url": "https://tu-sitio.com",
+        "image": "https://tu-sitio.com/imagen.png",
+        "author": {
+            "@type": "Person",
+            "name": "e-ghost",
+            "url": "https://tu-sitio.com"
+        }
+    }
+    </script>
+</head>
+
+<body id="page-top" class="index">
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Cambiar navegación</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#page-top">AgendaVue</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#contactos">Contactos</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#nuevo">Añadir contacto</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#about">Acerca de...</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="intro-text">
+                        <span class="name">AgendaVue</span>
+                        <hr class="star-light">
+                        <span class="skills">Agenda básica en Vue</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="app">
+        <!-- Contactos Grid Section -->
+        <section id="contactos">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h2>Contactos</h2>
+                        <hr class="star-primary">
+                    </div>
+                </div>
+                <div v-if="contactos.length > 0">
+                    <div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <h4>Nombre</h4>
+                            </div>
+                            <div class="col-xs-4">
+                                <h4>Email</h4>
+                            </div>
+                            <div class="col-xs-3">
+                                <h4>Teléfono</h4>
+                            </div>
+                            <div class="col-xs-1">
+                                <h4>Eliminar</h4>
+                            </div>
+                        </div>
+                        <div v-for="(contacto, index) in contactos" :key="index" class="row">
+                            <div class="col-xs-4">
+                                <p>{{ contacto.nombre }}</p>
+                            </div>
+                            <div class="col-xs-4">
+                                <p>{{ contacto.email }}</p>
+                            </div>
+                            <div class="col-xs-3">
+                                <p>{{ contacto.telefono }}</p>
+                            </div>
+                            <div class="col-xs-1">
+                                <button class="btn btn-danger btn-sm" @click="eliminarContacto(index)">
+                                    <span class="glyphicon glyphicon-remove"></span> Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-else>
+                    <p class="text-center">No hay contactos en la lista.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Añadir nuevo Section -->
+        <section id="nuevo">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h2>Añadir contacto</h2>
+                        <hr class="star-primary">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <form @submit.prevent="agregarContacto">
+                            <div class="row control-group">
+                                <div class="form-group col-xs-12 floating-label-form-group controls">
+                                    <label>Nombre</label>
+                                    <input type="text" class="form-control" placeholder="Nombre" v-model="nuevoContacto.nombre" required>
+                                </div>
+                            </div>
+                            <div class="row control-group">
+                                <div class="form-group col-xs-12 floating-label-form-group controls">
+                                    <label>Email</label>
+                                    <input type="email" class="form-control" placeholder="Email" v-model="nuevoContacto.email" required>
+                                </div>
+                            </div>
+                            <div class="row control-group">
+                                <div class="form-group col-xs-12 floating-label-form-group controls">
+                                    <label>Teléfono</label>
+                                    <input type="tel" class="form-control" placeholder="Número de teléfono" pattern="^\d{9}$" v-model="nuevoContacto.telefono"  title="Por favor ingrese un número de teléfono válido de 9 dígitos" required >
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="form-group col-xs-12">
+                                    <button type="submit" class="btn btn-success btn-lg">Añadir</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Vue.js Script -->
+    <script type = 'module'>
+        import { db, collection, addDoc, getDocs, deleteDoc, doc } from './js/firebase_init.js';
+
+        new Vue({
+            el: '#app',
+            data: {
+                contactos: [],
+                nuevoContacto: {
+                    nombre: '',
+                    email: '',
+                    telefono: ''
+                }
+            },
+            created() {
+                this.cargarContactos();
+            },
+            methods: {
+                async cargarContactos() {
+                    const querySnapshot = await getDocs(collection(db, "contactos"));
+                    this.contactos = querySnapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                },
+                async agregarContacto() {
+                    try {
+                        const docRef = await addDoc(collection(db, "contactos"), {
+                            nombre: this.nuevoContacto.nombre,
+                            email: this.nuevoContacto.email,
+                            telefono: this.nuevoContacto.telefono
+                        });
+                        this.contactos.push({
+                            id: docRef.id,
+                            ...this.nuevoContacto
+                        });
+                        this.nuevoContacto.nombre = '';
+                        this.nuevoContacto.email = '';
+                        this.nuevoContacto.telefono = '';
+                    } catch (e) {
+                        console.error("Error adding document: ", e);
+                    }
+                },
+                async eliminarContacto(index) {
+                    const contactoId = this.contactos[index].id;
+                    try {
+                        await deleteDoc(doc(db, "contactos", contactoId));
+                        this.contactos.splice(index, 1);
+                    } catch (e) {
+                        console.error("Error deleting document: ", e);
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
